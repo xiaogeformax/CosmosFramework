@@ -42,8 +42,8 @@ public class EnmeyEntity: EntityObject
     public override void OnInit(string entityName, int entityInstanceId, string entityGroupName)
     {
         base.OnInit(entityName, entityInstanceId, entityGroupName);
-        entityAnimator = GetComponent<EntityAnimator>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
+        entityAnimator = GetUnityComponent<EntityAnimator>();
+        capsuleCollider = GetUnityComponent<CapsuleCollider>();
         entityAnimator.OnHitOff += OnHitOff;
     }
     public override void OnHide()

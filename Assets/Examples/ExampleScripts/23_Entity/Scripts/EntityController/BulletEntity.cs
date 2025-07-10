@@ -2,48 +2,42 @@
 using UnityEngine;
 using Cosmos;
 using Cosmos.Entity;
-public class BulletEntity: EntityObject
+
+public class BulletEntity : EntityObject
 {
-    float moveDuration;
-    float speed;
-    float currentTime = 0;
     public Action<GameObject> onHit;
-    EntityBulletTrigger bulletTrigger;
-    public float Speed
-    {
-        get { return speed; }
-        set { speed = value; }
-    }
-    public float MoveDuration
-    {
-        get { return moveDuration; }
-        set { moveDuration = value; }
-    }
-    public void OnShoot()
-    {
-        currentTime = 0;
-    }
+
     private void Start()
     {
-        bulletTrigger = gameObject.GetOrAddComponentInChildren<EntityBulletTrigger>("BulletTrigger");
-        bulletTrigger.onTriggerHit = onHit;
+        // 添加必要组件
+        var movementComponent = AddComponent<BulletMovementComponent>();
+        var triggerComponent = AddComponent<BulletTriggerComponent>();
+        
+        // 配置子组件
+        triggerComponent.OnHitCallback = OnBulletHit;
     }
-    private void Update()
+    
+    public void SetupBullet(float speed, float moveDuration)
     {
-        transform.position += transform.forward * Time.deltaTime * Speed;
-        currentTime += Time.deltaTime;
-        if (currentTime >= moveDuration)
-        {
-            onHit?.Invoke(null);
-        }
+        var movementComponent = GetComponent<BulletMovementComponent>();
+        movementComponent.Speed = speed;
+        movementComponent.MoveDuration = moveDuration;
     }
+    
+    public void OnShoot()
+    {
+        var movementComponent = GetComponent<BulletMovementComponent>();
+        movementComponent.ResetTime();
+    }
+
+    private void OnBulletHit(GameObject hitObject)
+    {
+        onHit?.Invoke(hitObject);
+    }
+
     public override void OnHide()
     {
         base.OnHide();
         transform.ResetWorldTransform();
-    }
-    public override void OnRecycle()
-    {
-        base.OnRecycle();
     }
 }
