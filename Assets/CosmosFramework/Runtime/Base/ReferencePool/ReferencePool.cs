@@ -87,7 +87,7 @@ namespace Cosmos
             var length = references.Length;
             for (int i = 0; i < length; i++)
             {
-                var type = references.GetType();
+                var type = references[i].GetType();
                 var pool = GetReferencePool(type);
                 pool.Release(references[i]);
             }
