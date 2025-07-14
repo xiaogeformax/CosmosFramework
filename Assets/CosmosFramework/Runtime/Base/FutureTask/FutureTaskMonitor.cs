@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using UnityEngine;
-
 namespace Cosmos
 {
     internal class FutureTaskMonitor : MonoSingleton<FutureTaskMonitor>
     {
-        // DateTime previousTimeSinceStartup;
+        DateTime previousTimeSinceStartup;
         Dictionary<int, FutureTask> futureTaskDict = new Dictionary<int, FutureTask>();
         List<FutureTask> futureTaskCache = new List<FutureTask>(64);
         bool isPause = false;
@@ -48,15 +46,14 @@ namespace Cosmos
             base.Awake();
             gameObject.hideFlags = UnityEngine.HideFlags.HideInHierarchy;
             DontDestroyOnLoad(gameObject);
-            // previousTimeSinceStartup = DateTime.Now;
+            previousTimeSinceStartup = DateTime.Now;
         }
         private void Update()
         {
             if (isPause)
                 return;
-            float deltaTime = Time.deltaTime;
-            // float deltaTime = (float)(DateTime.Now.Subtract(previousTimeSinceStartup).TotalMilliseconds / 1000.0f);
-            // previousTimeSinceStartup = DateTime.Now;
+            float deltaTime = (float)(DateTime.Now.Subtract(previousTimeSinceStartup).TotalMilliseconds / 1000.0f);
+            previousTimeSinceStartup = DateTime.Now;
             if (futureTaskDict.Count == 0)
             {
                 return;
